@@ -1,0 +1,66 @@
+services:
+  - type: web
+    name: laravel-app
+    env: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan key:generate
+      php artisan migrate --force
+      php artisan db:seed --force
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: Laravel
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:Am7lJjguIhOcI6IkF17hW08jeFDMjODpI93QNiG9X6I=
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://video-platform-1.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: laravel-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: laravel-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: laravel-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: laravel-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: laravel-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: CACHE_STORE
+        value: file
+      - key: LOG_CHANNEL
+        value: stack
+      - key: MAIL_MAILER
+        value: log
+      - key: MAIL_FROM_ADDRESS
+        value: hello@example.com
+      - key: MAIL_FROM_NAME
+        value: Laravel
+      - key: VITE_APP_NAME
+        value: Laravel
+
+databases:
+  - name: laravel-db
+    plan: free
+    databaseName: video_platform
+    user: postgres
